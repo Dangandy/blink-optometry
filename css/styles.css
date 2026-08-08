@@ -1,0 +1,527 @@
+/* ==========================================================================
+   Blink Optometry — landing page
+   Phase 2: stills-based phoropter intro + live hero handoff
+   ========================================================================== */
+
+/* ── Fonts (variable; weight ranges declared once each) ─────────────────── */
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter-400.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../assets/fonts/playfair-600.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --teal:        #03707b;   /* sampled from frame5's button */
+  --teal-hover:  #05868f;   /* lighter hover shade */
+  --teal-deep:   #0a4a52;   /* wordmark + section heads */
+  --teal-tint:   #f1f7f8;   /* very light section / card wash */
+  --teal-line:   #d3e6e8;   /* tinted hairline */
+  --ink:         #1d2b2e;
+  --muted:       #5d7175;
+  --bg:          #ffffff;
+  --line:        #e6eef0;
+  --radius:      14px;
+  --maxw:        680px;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* written by js/main.js on load + resize */
+  --lens-x: 50vw;
+  --lens-y: 46.7svh;
+  --lens-r: 24.6svh;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;   /* clip does not create a scroll container → sticky stays intact */
+}
+img, svg, iframe { display: block; max-width: 100%; }
+h1, h2, h3, p, ul, figure, address { margin: 0; }
+ul { list-style: none; padding: 0; }
+a { color: var(--teal); }
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ==========================================================================
+   1. Intro stage (decorative, aria-hidden)
+   ========================================================================== */
+#intro {
+  position: relative;
+  z-index: 40;
+  height: 400vh;
+  height: 400svh;          /* 4 viewport heights = 3vh of sticky travel */
+  margin-bottom: -100vh;
+  margin-bottom: -100svh;  /* pull #hero up so it sits *behind* the stage */
+}
+.no-intro #intro,
+.align-mode #intro { display: none; }
+
+.intro-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Full-viewport colour bed behind + around the portrait column. */
+.letterbox {
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  will-change: opacity, background-color;
+}
+
+/* The portrait column every piece of cover-math is derived from. */
+.stage-col {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, calc(100vh * 2 / 3));
+  width: min(100%, calc(100svh * 2 / 3));
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.stage-frames {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: opacity, transform;
+}
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 0;
+  will-change: opacity;
+}
+#f1 { opacity: 1; }
+
+/* ── Rim overlay (fixed porthole; JS owns transform + opacity) ──────────── */
+#rim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1024px;
+  height: 1536px;
+  max-width: none;
+  transform-origin: 0 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 60;
+  will-change: transform, opacity;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+/* ── Skip pill ──────────────────────────────────────────────────────────── */
+#skip {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  right: 14px;
+  z-index: 90;
+  padding: 8px 14px;
+  border: 1px solid rgba(10, 74, 82, .22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .74);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  color: var(--teal-deep);
+  font: 500 13px/1 var(--sans);
+  letter-spacing: .02em;
+  cursor: pointer;
+  transition: opacity .2s ease, background-color .2s ease;
+}
+#skip:hover { background: rgba(255, 255, 255, .92); }
+.no-intro #skip,
+.align-mode #skip { display: none; }
+#skip.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* ── Sticky Book Appointment pill (always on top) ───────────────────────── */
+#cta-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  margin-inline: auto;
+  width: max-content;
+  z-index: 100;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 6px 22px rgba(3, 62, 68, .28);
+  transition: opacity .28s ease, transform .28s ease, background-color .2s ease;
+}
+#cta-sticky:hover { background: var(--teal-hover); }
+#cta-sticky.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(150%);
+}
+@media (min-width: 768px) {
+  #cta-sticky {
+    left: auto;
+    right: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    margin-inline: 0;
+  }
+}
+
+/* ==========================================================================
+   2. Live content
+   ========================================================================== */
+main { position: relative; z-index: 1; }
+
+#hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px 96px;
+}
+
+/* --------------------------------------------------------------------------
+   The single unit that must land exactly where frame5's lockup sits.
+
+   Every child is absolutely positioned at the INK bbox it occupies in
+   frame5, expressed in cqw of the lockup box. Derivation: the box is the
+   total ink block of frame5's lockup — image px x 217.4…831.6 (width 614.2 =
+   0.812 D), y 457…1023 (height 566 = 92.152 % of the width). So
+   1cqw = 6.14197 image px, and every left/top/width/height below is a
+   measured pixel bbox divided by that. The box therefore has NO dependence
+   on font metrics: its height comes from aspect-ratio.
+
+     element   image bbox                 → left / top / w / h  (cqw)
+     eye       420,457  – 630,640           32.986 /  0.000 / 34.191 / 29.795
+     wordmark  292,694  – 764,789           12.146 / 38.587 / 76.848 / 15.467
+     tagline   219,830  – 831,858            0.261 / 60.730 / 99.642 /  4.559
+     button    304,927  – 744,1023          14.100 / 76.522 / 71.638 / 15.630
+
+   Text boxes are sized to the ink band and the glyphs are centred inside
+   them; --*-fs / --*-ls size the ink to fill the band and --*-dy nudges the
+   cap box onto it (font-metric compensation, calibrated in the browser).
+   -------------------------------------------------------------------------- */
+.hero-lockup {
+  container-type: inline-size;
+  position: relative;
+  width: min(88vw, 420px);
+  aspect-ratio: 100 / 92.152;
+  transform-origin: 50% 50%;
+  will-change: transform;
+
+  /* Solved in-browser against frame5's ink bboxes (canvas actualBoundingBox,
+     iterated to <0.01px on all four edges). fs/ls size the ink to the band;
+     dx/dy move the glyph box onto it (font-metric + letter-spacing offsets). */
+  --wm-fs: 21.7857cqw;  --wm-ls:  .11507em;  --wm-dx: .7650cqw;  --wm-dy: -1.3888cqw;
+  --tl-fs:  4.7541cqw;  --tl-ls: -.00112em;  --tl-dx: .0895cqw;  --tl-dy:  -.4891cqw;
+  --bt-fs:  6.3064cqw;  --bt-ls:  .02041em;  --bt-dx: .0026cqw;  --bt-dy:  -.3922cqw;
+}
+.hero-lockup > * { position: absolute; margin: 0; }
+.hero-lockup .ink { display: block; }
+
+.hero-lockup > .eye {
+  left: 32.986cqw;
+  top: 0;
+  width: 34.191cqw;
+  height: 29.795cqw;
+}
+.eye { color: var(--teal); }
+
+.wordmark {
+  left: 12.146cqw;
+  top: 38.587cqw;
+  width: 76.848cqw;
+  height: 15.467cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: var(--wm-fs);
+  line-height: 1;
+  letter-spacing: var(--wm-ls);
+  white-space: nowrap;
+  color: var(--teal-deep);
+}
+.wordmark .ink { transform: translate(var(--wm-dx), var(--wm-dy)); }
+
+.tagline {
+  left: .261cqw;
+  top: 60.730cqw;
+  width: 99.642cqw;
+  height: 4.559cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tl-fs);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--tl-ls);
+  white-space: nowrap;
+  color: var(--teal-deep);
+}
+.tagline .ink { transform: translate(var(--tl-dx), var(--tl-dy)); }
+
+.lockup-cta {
+  left: 14.100cqw;
+  top: 76.522cqw;
+  width: 71.638cqw;
+  height: 15.630cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2.93cqw;
+  background: var(--teal);
+  color: #fff;
+  font-weight: 400;
+  font-size: var(--bt-fs);
+  line-height: 1;
+  letter-spacing: var(--bt-ls);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.lockup-cta .ink { transform: translate(var(--bt-dx), var(--bt-dy)); }
+.lockup-cta:hover { background: var(--teal-hover); }
+
+.scroll-cue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  /* --cue-fade (0..1) is written by JS from the release progress q; it scales
+     the idle bob's opacity so the cue clears out before the hero lockup
+     releases into the same space. Declared here too so the reduced-motion
+     branch below (animation: none) still fades. */
+  opacity: var(--cue-fade, 1);
+  animation: cue-bob 2.4s ease-in-out infinite;
+}
+@keyframes cue-bob {
+  0%, 100% { transform: translateY(0);   opacity: calc(var(--cue-fade, 1) * .75); }
+  50%      { transform: translateY(6px); opacity: var(--cue-fade, 1); }
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+.section { padding: 72px 20px; }
+.section--tint { background: var(--teal-tint); }
+.wrap { max-width: var(--maxw); margin: 0 auto; }
+.section-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(28px, 6vw, 38px);
+  line-height: 1.15;
+  letter-spacing: .01em;
+  color: var(--teal-deep);
+  text-align: center;
+}
+.section-lede {
+  margin: 12px auto 0;
+  max-width: 44ch;
+  text-align: center;
+  color: var(--muted);
+}
+@media (min-width: 768px) {
+  .section { padding: 104px 24px; }
+}
+
+/* Services */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 36px;
+}
+@media (min-width: 560px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+.card {
+  padding: 22px 22px 24px;
+  border: 1px solid var(--teal-line);
+  border-radius: var(--radius);
+  background: var(--teal-tint);
+}
+.card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--teal-deep);
+}
+.card h3::after {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin: 10px 0 10px;
+  background: var(--teal);
+  border-radius: 2px;
+}
+.card p { font-size: 15px; color: var(--muted); }
+
+/* Hours */
+.hours-list { margin-top: 32px; }
+.hours-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 2px;
+  border-bottom: 1px solid var(--teal-line);
+}
+.hours-list li:last-child { border-bottom: 0; }
+.hours-list .day { font-weight: 500; color: var(--teal-deep); }
+.hours-list .time { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.hours-list .time--closed { color: #97a7aa; }
+
+/* Visit */
+.visit-address {
+  margin-top: 28px;
+  font-style: normal;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--teal-deep);
+}
+.visit-links { margin-top: 10px; text-align: center; }
+.visit-links a { text-decoration: none; border-bottom: 1px solid var(--teal-line); }
+.visit-links a:hover { color: var(--teal-hover); border-bottom-color: var(--teal-hover); }
+.visit-links .dot { margin: 0 10px; color: var(--teal-line); }
+.visit-cta { margin-top: 26px; text-align: center; }
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.btn:hover { background: var(--teal-hover); }
+.map {
+  margin-top: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--teal-tint);
+}
+.map iframe {
+  width: 100%;
+  height: 320px;
+  border: 0;
+}
+
+/* Footer */
+footer.section {
+  border-top: 1px solid var(--line);
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); /* clear the sticky pill */
+}
+.footer-wrap { text-align: center; }
+.footer-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.eye--sm { width: 32px; height: auto; color: var(--teal); }
+.footer-wordmark {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: .16em;
+  text-indent: .16em;
+  color: var(--teal-deep);
+}
+.footer-address {
+  margin-top: 16px;
+  font-style: normal;
+  font-size: 15px;
+  color: var(--muted);
+}
+.footer-address a { color: var(--teal); text-decoration: none; }
+.footer-address a:hover { color: var(--teal-hover); text-decoration: underline; }
+.footer-legal { margin-top: 14px; font-size: 13px; color: #8b9a9d; }
+
+/* ==========================================================================
+   3. ?align=1 calibration overlay
+   ========================================================================== */
+#align-overlay {
+  position: fixed;
+  opacity: .5;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  z-index: 70;
+  max-width: none;
+}
+#align-badge {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 110;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #d62d20;
+  color: #fff;
+  font: 600 12px/1 var(--sans);
+  letter-spacing: .18em;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   4. Reduced motion — no intro at all, no idle animation
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .scroll-cue { animation: none; }
+  #cta-sticky { transition: opacity .01ms linear; }
+  #cta-sticky.is-hidden { transform: none; }
+}
