@@ -12,14 +12,22 @@
 
   /* ── Tunable constants (QA calibrates these) ───────────────────────────── */
 
-  // Lockup box width as a fraction of the on-screen lens DIAMETER at handoff.
-  // The box is frame5's total lockup ink block: 614.2 image px wide over a
-  // 756.4 px lens diameter. Its height follows from CSS aspect-ratio (92.152 %).
-  var LOCKUP_TO_LENS = 0.812;
-  // Lockup centre offset from the lens centre, in lens DIAMETERS.
-  // frame5's ink block is centred at image (524.5, 740) vs lens (533, 717.5).
-  var LOCKUP_X_OFFSET = -0.0112;   // + = right
-  var LOCKUP_Y_OFFSET = 0.0300;    // + = down
+  // ── Handoff transform: DERIVED, not calibrated ────────────────────────────
+  // frame5's lens content IS a circular crop of a 1024x1536 screenshot of this
+  // page (tools/compose_frames.py; crop + lens geometry in M below). So the
+  // lockup's on-frame size is pure arithmetic — no eyeballing, and re-running
+  // the pipeline reprints these numbers:
+  //
+  //   crop -> disc scale = 756.4 / (2 x 207.8)      = 1.8200
+  //   LOCKUP_TO_LENS     = 336.81 x 1.82 / 756.4    = 0.8104
+  //   LOCKUP_*_OFFSET    = (lockup centre - crop centre) x 1.82 / 756.4 = 0
+  //
+  // The offsets are exactly zero BY CONSTRUCTION: the crop is centred on the
+  // lockup's own centre, so the lockup lands on the lens centre. Keep them —
+  // if the crop is ever re-centred they stop being zero.
+  var LOCKUP_TO_LENS = 0.8104;
+  var LOCKUP_X_OFFSET = 0.0000;    // + = right
+  var LOCKUP_Y_OFFSET = 0.0000;    // + = down
   // Rim scale at the end of the release (becomes a soft corner frame).
   // This is the CAP: measureViewport() clamps it per-viewport so the ring's
   // hole edge never recedes past the farthest viewport corner (see rimFinalScale).
@@ -54,13 +62,29 @@
     lbOut:     [0.84, 1.00]   // letterbox dissolves, live hero visible
   };
 
-  /* ── Baked measurements (from tools/make_rim.py — do NOT fetch at runtime) */
+  /* ── Baked measurements — do NOT fetch at runtime ──────────────────────────
+     Mirror of assets/opt/measurements.json, written by tools/compose_frames.py
+     (rim_hole from tools/make_rim.py). s1_crop/s1_lockup are the construction
+     the LOCKUP_* constants above are derived from; they are documentation for
+     that derivation, not read by this file. */
   var M = {
     image:       { w: 1024, h: 1536 },
     rim_hole:    { cx: 522.0, cy: 692.5, r: 362.8 },
     frame5_lens: { cx: 533.0, cy: 717.5, r: 378.2 },
-    teal_hex:    '#03707b'
+    s1_crop:     { cx: 512.0, cy: 767.99, r: 207.8 },
+    s1_lockup:   { x: 343.59, y: 628.81, w: 336.81, h: 278.36 },
+    teal_hex:    '#006d73'
   };
+
+  /* Letterbox bed colours, sampled from the stills so the pillarboxes on wide
+     viewports continue the frame instead of cutting against it:
+       wall  — frame1/2's studio wall (border median of frame1.webp)
+       dark  — the exam-room black frames 3–5 are shot against
+       paper — the live page's own --color-paper, so the bed can dissolve
+               into the hero without a flash of white. */
+  var BED_WALL  = [228, 225, 218];
+  var BED_DARK  = [0, 0, 0];
+  var BED_PAPER = [248, 244, 236];
 
   /* ── Math helpers ──────────────────────────────────────────────────────── */
   function clamp01(v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
@@ -72,6 +96,11 @@
   function easeOutCubic(t) { var u = 1 - t; return 1 - u * u * u; }
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function mixRgb(a, b, t) {
+    return [Math.round(a[0] + (b[0] - a[0]) * t),
+            Math.round(a[1] + (b[1] - a[1]) * t),
+            Math.round(a[2] + (b[2] - a[2]) * t)];
   }
 
   /* ── DOM ───────────────────────────────────────────────────────────────── */
@@ -93,10 +122,15 @@
 
   /* ── Entry path ────────────────────────────────────────────────────────── */
   // 'normal' — intro plays and drives p from scroll
-  // 'off'    — sessionStorage flag or prefers-reduced-motion: p=1, q=1, static
+  // 'off'    — sessionStorage flag, prefers-reduced-motion, or a ?shot= clean
+  //            plate (shot=hero | shot=page, classed by the head script):
+  //            p=1, q=1, static, page chrome hidden by CSS
   // 'align'  — ?align=1 calibration: p=1, q=0, static, frame5 overlaid at 50%
   var alignMode = location.search.indexOf('align=1') > -1;
-  var mode = alignMode ? 'align' : (root.className.indexOf('no-intro') > -1 ? 'off' : 'normal');
+  var shotMode  = root.className.indexOf('shot-mode') > -1;
+  var mode = alignMode
+    ? 'align'
+    : ((shotMode || root.className.indexOf('no-intro') > -1) ? 'off' : 'normal');
 
   /* ── Geometry state ────────────────────────────────────────────────────── */
   var vw = 0, vh = 0;              // clientWidth, 100svh in px
@@ -226,11 +260,12 @@
     frames.style.transform = 'scale(' + stageScale + ')';
 
     if (letterbox) {
-      // white behind frames 1–2 → black from the cut → back to page white.
-      var g;
-      if (p < T.cut) g = 255;
-      else g = Math.round(255 * smooth01(p, T.lbColor));
-      letterbox.style.backgroundColor = 'rgb(' + g + ',' + g + ',' + g + ')';
+      // wall behind frames 1–2 → black from the cut → up to the page's paper.
+      var bed = (p < T.cut)
+        ? BED_WALL
+        : mixRgb(BED_DARK, BED_PAPER, smooth01(p, T.lbColor));
+      letterbox.style.backgroundColor =
+        'rgb(' + bed[0] + ',' + bed[1] + ',' + bed[2] + ')';
       letterbox.style.opacity = 1 - lin01(p, T.lbOut);
     }
   }

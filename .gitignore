@@ -2,3 +2,5 @@
 tools/.venv/
 .playwright-mcp/
 .vercel
+.env*
+shots/work/frame[1-4]_*.png

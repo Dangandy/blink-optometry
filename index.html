@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Blink Optometry | Eye Exams, Contact Lenses &amp; Myopia Control in Scarborough</title>
-<meta name="description" content="Blink Optometry in Scarborough — comprehensive eye exams, contact lens fittings, myopia control and Ortho-K, paediatric and diabetic eye exams. 4236 Sheppard Ave. East, Unit 75. Book an appointment today.">
-<meta name="theme-color" content="#03707b">
+<meta name="description" content="Blink Optometry, Agincourt: comprehensive eye exams, specialty contact lens fittings, myopia control and Ortho-K, paediatric and diabetic exams. Drs. Jacky Ock and Melissa Poon. 4236 Sheppard Ave. East, Unit 75, Scarborough.">
+<meta name="theme-color" content="#004d55">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2303707b'/%3E%3Cpath d='M4.5 16c4.2-6.4 18.8-6.4 23 0-4.2 6.4-18.8 6.4-23 0z' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='4.4' fill='%2303707b'/%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Blink Optometry">
 <meta property="og:title" content="Blink Optometry | Vision Care · Contact Lens · Myopia Control">
-<meta property="og:description" content="Comprehensive eye exams, contact lens fittings, myopia control and Ortho-K for the whole family in Scarborough, Ontario.">
+<meta property="og:description" content="An optometry practice on Sheppard East in Agincourt. Eye exams, specialty contact lens fittings, myopia control and Ortho-K, with Drs. Jacky Ock and Melissa Poon.">
 <meta property="og:url" content="https://www.blinkvision.ca">
 <meta property="og:image" content="https://www.blinkvision.ca/assets/opt/frame5.webp">
 <meta property="og:image:width" content="1024">
@@ -20,11 +20,11 @@
 <meta property="og:image:alt" content="The Blink Optometry logo seen sharply through a phoropter lens.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blink Optometry | Vision Care · Contact Lens · Myopia Control">
-<meta name="twitter:description" content="Comprehensive eye exams, contact lens fittings, myopia control and Ortho-K for the whole family in Scarborough, Ontario.">
+<meta name="twitter:description" content="An optometry practice on Sheppard East in Agincourt. Eye exams, specialty contact lens fittings, myopia control and Ortho-K, with Drs. Jacky Ock and Melissa Poon.">
 <meta name="twitter:image" content="https://www.blinkvision.ca/assets/opt/frame5.webp">
 
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-600.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-var.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/public-sans-var.woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="assets/opt/frame2.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/opt/frame3.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/opt/frame4.webp">
@@ -44,6 +44,9 @@
   if (reduce || seen) d.className += ' no-intro';
   if (reduce) d.className += ' reduce-motion';
   if (location.search.indexOf('align=1') > -1) d.className += ' align-mode';
+  /* Clean-plate states for the still pipeline: intro skipped, chrome hidden. */
+  if (location.search.indexOf('shot=hero') > -1) d.className += ' shot-mode shot-hero';
+  else if (location.search.indexOf('shot=page') > -1) d.className += ' shot-mode shot-page';
 })();
 </script>
 <noscript><style>#intro,#rim,#skip{display:none!important}</style></noscript>
@@ -57,6 +60,7 @@
   "image": "https://www.blinkvision.ca/assets/opt/frame5.webp",
   "telephone": "+1-416-292-9750",
   "email": "info@blinkvision.ca",
+  "slogan": "Reliable. Professional. Friendly.",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "4236 Sheppard Ave. East, Unit 75",
@@ -65,6 +69,29 @@
     "postalCode": "M1S 2C1",
     "addressCountry": "CA"
   },
+  "employee": [
+    {
+      "@type": "Physician",
+      "name": "Dr. Jacky Ock, H.BSc., O.D.",
+      "medicalSpecialty": "Optometric",
+      "knowsLanguage": ["en", "yue", "cmn"],
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "University of Toronto" },
+        { "@type": "CollegeOrUniversity", "name": "Pennsylvania College of Optometry" }
+      ]
+    },
+    {
+      "@type": "Physician",
+      "name": "Dr. Melissa Poon, H.BSc, O.D.",
+      "medicalSpecialty": "Optometric",
+      "knowsLanguage": ["en", "yue"],
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "University of Toronto" },
+        { "@type": "CollegeOrUniversity", "name": "Pennsylvania College of Optometry" }
+      ]
+    }
+  ],
+  "knowsLanguage": ["en", "yue", "cmn"],
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday",    "opens": "10:00", "closes": "18:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday",   "opens": "00:00", "closes": "00:00" },
@@ -88,28 +115,26 @@
 </head>
 <body>
 
+<a class="skip-link" href="#services">Skip to content</a>
+
 <button id="skip" type="button" aria-label="Skip the intro animation">Skip intro</button>
 
 <a id="cta-sticky" href="https://www.blinkvision.ca/book-now">Book Appointment</a>
 
-<!-- Eye mark: traced from frame5's icon. viewBox == the icon's ink bbox
-     (image px 420,457 – 630,640), so the rendered box IS the ink box. -->
+<!-- Eye mark: one stroke weight throughout — lashes, lids and pupil drawn
+     with the same pen. viewBox == the mark's ink bbox. -->
 <svg class="svg-defs" aria-hidden="true" focusable="false"><symbol id="eye-mark" viewBox="0 0 211 184">
-  <g fill="none" stroke="currentColor" stroke-linecap="round">
-    <g stroke-width="10">
-      <path d="M9.5 52.5 L26.3 68.65"></path>
-      <path d="M49.5 19.8 L60.75 42.6"></path>
-      <path d="M105 5.5 L105 33.5"></path>
-      <path d="M160.5 19.8 L149.25 42.6"></path>
-      <path d="M200.5 52.5 L183.7 68.65"></path>
-    </g>
-    <g stroke-width="15">
-      <path d="M7.5 103 C 31.5 109, 43.5 55.5, 105.5 55.5 C 167.5 55.5, 179.5 109, 203.5 103"></path>
-      <path d="M9.5 138.5 C 29.5 133, 49 176.5, 105 176.5 C 161 176.5, 180.5 133, 200.5 138.5"></path>
-    </g>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11">
+    <path d="M8.5 51 L27 68.8"></path>
+    <path d="M48.5 17.5 L61 42.8"></path>
+    <path d="M105 3.5 L105 33"></path>
+    <path d="M161.5 17.5 L149 42.8"></path>
+    <path d="M201.5 51 L183 68.8"></path>
+    <path d="M8 103.5 C 31.5 109, 43.5 55.5, 105.5 55.5 C 167.5 55.5, 179.5 109, 203 103.5"></path>
+    <path d="M10 138 C 29.5 133, 49 176.5, 105 176.5 C 161 176.5, 180.5 133, 200 138"></path>
   </g>
-  <circle cx="105" cy="113" r="38" fill="currentColor"></circle>
-  <circle cx="87" cy="96" r="9.5" fill="#ffffff"></circle>
+  <circle cx="105" cy="114" r="36" fill="currentColor"></circle>
+  <circle cx="88" cy="98" r="8.5" fill="var(--eye-glint)"></circle>
 </symbol></svg>
 
 <div id="intro" aria-hidden="true">
@@ -131,104 +156,186 @@
 
 <main>
 
+  <div class="chrome-strip" aria-hidden="true"></div>
+
   <section id="hero">
     <div class="hero-lockup" id="hero-lockup">
       <svg class="eye" viewBox="0 0 211 184" width="211" height="184" aria-hidden="true" focusable="false"><use href="#eye-mark"></use></svg>
-      <h1 class="wordmark"><span class="ink">BLINK</span></h1>
-      <p class="tagline"><span class="ink">Vision Care &#8226; Contact Lens &#8226; Myopia Control</span></p>
-      <a class="lockup-cta" id="hero-cta" href="https://www.blinkvision.ca/book-now"><span class="ink">Book Appointment</span></a>
+      <h1 class="wordmark">BLINK</h1>
+      <p class="tagline">Vision Care &#183; Contact Lens &#183; Myopia Control</p>
+      <a class="btn lockup-cta" id="hero-cta" href="https://www.blinkvision.ca/book-now">Book Appointment</a>
     </div>
     <div class="scroll-cue" aria-hidden="true">
       <span>Scroll</span>
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
     </div>
   </section>
 
-  <section id="services" class="section">
+  <div class="masthead">
+    <div class="wrap masthead-inner">
+      <p class="strapline">Reliable. Professional. Friendly.</p>
+      <nav class="index" aria-label="Sections of this page">
+        <a href="#services">Services</a><span aria-hidden="true">&#183;</span><a href="#doctors">Doctors</a><span aria-hidden="true">&#183;</span><a href="#hours">Hours</a><span aria-hidden="true">&#183;</span><a href="#visit">Visit</a>
+      </nav>
+    </div>
+  </div>
+
+  <section id="services" class="section section--services">
     <div class="wrap">
       <h2 class="section-title">Services</h2>
-      <p class="section-lede">Everyday eye care for every age, from first exams to specialty lenses.</p>
-      <ul class="cards">
-        <li class="card">
-          <h3>Comprehensive Eye Exams</h3>
-          <p>An unhurried look at how your eyes see, focus and feel — with time to ask questions.</p>
-        </li>
-        <li class="card">
-          <h3>Contact Lens (Soft &amp; Specialty)</h3>
-          <p>Fittings, trials and follow-ups, from daily disposables through to specialty designs.</p>
-        </li>
-        <li class="card">
-          <h3>Myopia Control / Ortho-K</h3>
-          <p>Personalised options, including overnight Ortho-K lenses, for growing eyes.</p>
-        </li>
-        <li class="card">
-          <h3>Paediatric Eye Exams</h3>
-          <p>Gentle, playful visits built around little ones and short attention spans.</p>
-        </li>
-        <li class="card">
-          <h3>Diabetic Eye Exams</h3>
-          <p>Regular check-ins on your eye health, with notes shared back to your care team.</p>
-        </li>
-        <li class="card">
-          <h3>Laser Eye Surgery Consult</h3>
-          <p>A straightforward conversation about whether laser correction suits your eyes and lifestyle.</p>
-        </li>
-      </ul>
+      <dl class="deflist">
+        <div class="deflist-row">
+          <dt>Comprehensive Eye Exams</dt>
+          <dd>Refraction, eye-health checks, and a plain-language account of what we found.</dd>
+        </div>
+        <div class="deflist-row">
+          <dt>Contact Lens Fitting</dt>
+          <dd>Soft and specialty &mdash; from daily disposables to keratoconic and dry, hard-to-fit eyes.</dd>
+        </div>
+        <div class="deflist-row">
+          <dt>Myopia Control &amp; Ortho-K</dt>
+          <dd>Slowing the drift in growing eyes, including overnight Ortho-K lenses worn while your child sleeps.</dd>
+        </div>
+        <div class="deflist-row">
+          <dt>Paediatric Eye Exams</dt>
+          <dd>First exams paced to short attention spans. OHIP covers every child 19 and under, once a year.</dd>
+        </div>
+        <div class="deflist-row">
+          <dt>Diabetic Eye Exams</dt>
+          <dd>The retinal check OHIP keeps covering between 20 and 64 when you live with diabetes.</dd>
+        </div>
+        <div class="deflist-row">
+          <dt>Laser Surgery Consults</dt>
+          <dd>A straight answer on whether laser correction suits your prescription and your eyes.</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
-  <section id="hours" class="section section--tint">
+  <section id="doctors" class="section section--doctors">
+    <div class="wrap">
+      <h2 class="section-title">The doctors</h2>
+
+      <article class="doctor doctor--a">
+        <div class="doctor-body">
+          <h3 class="doctor-name">Dr. Jacky Ock</h3>
+          <p class="doctor-creds">H.BSc., O.D.</p>
+          <p>Dr. Ock fits the contact lenses other chairs call difficult: myopia control for growing eyes, keratoconus, and eyes that have gone dry on every lens they have tried. He read an Honours BSc at the University of Toronto, then took his Doctor of Optometry at the Pennsylvania College of Optometry.</p>
+        </div>
+        <aside class="doctor-side">
+          <p class="doctor-meta"><span class="micro">Trained</span>University of Toronto &#183; Pennsylvania College of Optometry</p>
+          <p class="doctor-meta"><span class="micro">Focus</span>Specialty contact lenses &#183; myopia control &#183; keratoconus &#183; dry eye</p>
+          <p class="doctor-meta"><span class="micro">Speaks</span><span lang="en">English</span> &#183; <span lang="yue-Hant">廣東話</span> &#183; <span lang="cmn-Hant">普通話</span></p>
+        </aside>
+      </article>
+
+      <article class="doctor doctor--b">
+        <div class="doctor-body">
+          <h3 class="doctor-name">Dr. Melissa Poon</h3>
+          <p class="doctor-creds">H.BSc, O.D.</p>
+          <p>Toronto-born, Dr. Poon interned in Philadelphia, Miami and Chicago, practised in New York City, and joined a charity optometric mission to Haiti before coming home to practise here. Her day covers contact lenses, cataracts, diabetes, dry eye and glaucoma.</p>
+        </div>
+        <aside class="doctor-side">
+          <p class="doctor-meta"><span class="micro">Trained</span>University of Toronto &#183; Pennsylvania College of Optometry, Dean&#8217;s List</p>
+          <p class="doctor-meta"><span class="micro">Focus</span>Contact lenses &#183; cataracts &#183; diabetes &#183; dry eye &#183; glaucoma</p>
+          <p class="doctor-meta"><span class="micro">Speaks</span><span lang="en">English</span> &#183; <span lang="yue-Hant">廣東話</span></p>
+        </aside>
+      </article>
+    </div>
+  </section>
+
+  <figure class="pull-quote">
+    <div class="wrap pull-quote-inner">
+      <blockquote>Proper eye care starts and ends with proper patient education.</blockquote>
+      <figcaption>&mdash; Dr. Jacky Ock</figcaption>
+    </div>
+  </figure>
+
+  <section id="know" class="section section--know">
+    <div class="wrap">
+      <h2 class="section-title">Good to know</h2>
+      <dl class="almanac">
+        <div class="almanac-row">
+          <dt>OHIP</dt>
+          <dd>Covered once a year for patients 19 and under and 65 and over. Between 20 and 64, OHIP pays only if you have diabetes or one of a short list of eye diseases &mdash; call us and we will confirm your coverage before you come in.</dd>
+        </div>
+        <div class="almanac-row">
+          <dt>Insurance</dt>
+          <dd>We bill insurance companies directly where we can. Ask about direct billing when you book and we will tell you exactly where you stand.</dd>
+        </div>
+        <div class="almanac-row">
+          <dt>Driver&#8217;s tests</dt>
+          <dd>Driver&#8217;s-test examinations and OACP examinations are done here, by appointment.</dd>
+        </div>
+        <div class="almanac-row">
+          <dt>Languages</dt>
+          <dd><span lang="en">English</span>, Cantonese and Mandarin are spoken in the practice &mdash; <span lang="yue-Hant">廣東話</span> &#183; <span lang="cmn-Hant">普通話</span>.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="hours" class="section section--hours">
     <div class="wrap">
       <h2 class="section-title">Hours</h2>
-      <ul class="hours-list">
-        <li><span class="day">Monday</span><span class="time">10am &ndash; 6pm</span></li>
-        <li><span class="day">Tuesday</span><span class="time time--closed">Closed</span></li>
-        <li><span class="day">Wednesday</span><span class="time">11am &ndash; 7pm</span></li>
-        <li><span class="day">Thursday</span><span class="time">12pm &ndash; 7pm</span></li>
-        <li><span class="day">Friday</span><span class="time">11am &ndash; 7pm</span></li>
-        <li><span class="day">Saturday</span><span class="time">9am &ndash; 3pm</span></li>
-        <li><span class="day">Sunday</span><span class="time">By Appointment Only</span></li>
-      </ul>
+      <table class="ledger">
+        <caption class="visually-hidden">Opening hours for Blink Optometry</caption>
+        <tbody>
+          <tr><th scope="row">Monday</th><td>10am&#8211;6pm</td></tr>
+          <tr><th scope="row">Tuesday</th><td class="is-closed">Closed</td></tr>
+          <tr><th scope="row">Wednesday</th><td>11am&#8211;7pm</td></tr>
+          <tr><th scope="row">Thursday</th><td>12pm&#8211;7pm</td></tr>
+          <tr><th scope="row">Friday</th><td>11am&#8211;7pm</td></tr>
+          <tr><th scope="row">Saturday</th><td>9am&#8211;3pm</td></tr>
+          <tr><th scope="row">Sunday</th><td class="is-closed">By appointment</td></tr>
+        </tbody>
+      </table>
+      <p class="hours-note">Closed Tuesdays. Sundays by appointment.</p>
     </div>
   </section>
 
-  <section id="visit" class="section">
+  <section id="visit" class="section section--visit">
     <div class="wrap">
-      <h2 class="section-title">Visit Us</h2>
-      <address class="visit-address">
-        4236 Sheppard Ave. East, Unit 75<br>
-        Scarborough, ON M1S 2C1
-      </address>
-      <p class="visit-links">
-        <a href="tel:+14162929750">416-292-9750</a>
-        <span class="dot" aria-hidden="true">&#8226;</span>
-        <a href="mailto:info@blinkvision.ca">info@blinkvision.ca</a>
-      </p>
-      <p class="visit-cta"><a class="btn" href="https://www.blinkvision.ca/book-now">Book Appointment</a></p>
-      <div class="map">
-        <iframe
-          src="https://www.google.com/maps?q=4236+Sheppard+Ave.+East+Unit+75+Scarborough+ON+M1S+2C1&amp;output=embed"
-          title="Map showing Blink Optometry at 4236 Sheppard Avenue East, Unit 75, Scarborough, Ontario"
-          width="640" height="480" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <h2 class="section-title">Visit</h2>
+      <div class="visit-grid">
+        <div class="visit-col">
+          <p class="visit-place">Sheppard Avenue East, in Agincourt.</p>
+          <address class="visit-address">
+            4236 Sheppard Ave. East, Unit 75<br>
+            Scarborough, Ontario M1S 2C1
+          </address>
+          <p class="visit-links">
+            <a href="tel:+14162929750">416-292-9750</a><br>
+            <a href="mailto:info@blinkvision.ca">info@blinkvision.ca</a>
+          </p>
+          <p class="visit-cta"><a class="btn" href="https://www.blinkvision.ca/book-now">Book Appointment</a></p>
+        </div>
+        <figure class="map">
+          <iframe
+            src="https://www.google.com/maps?q=4236+Sheppard+Ave.+East+Unit+75+Scarborough+ON+M1S+2C1&amp;output=embed"
+            title="Map showing Blink Optometry at 4236 Sheppard Avenue East, Unit 75, Scarborough, Ontario"
+            width="640" height="480" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <figcaption>4236 Sheppard Ave. E., Unit 75 &#183; Scarborough ON M1S 2C1</figcaption>
+        </figure>
       </div>
     </div>
   </section>
-
-  <footer class="section">
-    <div class="wrap footer-wrap">
-      <div class="footer-lockup">
-        <svg class="eye eye--sm" viewBox="0 0 211 184" width="211" height="184" aria-hidden="true" focusable="false"><use href="#eye-mark"></use></svg>
-        <span class="footer-wordmark">BLINK</span>
-      </div>
-      <address class="footer-address">
-        4236 Sheppard Ave. East, Unit 75, Scarborough, ON M1S 2C1<br>
-        <a href="tel:+14162929750">416-292-9750</a> &middot; <a href="mailto:info@blinkvision.ca">info@blinkvision.ca</a>
-      </address>
-      <p class="footer-legal">&copy; 2026 Blink Optometry.</p>
-    </div>
-  </footer>
 
 </main>
+
+<footer class="colophon">
+  <div class="wrap colophon-inner">
+    <p class="colophon-mark">
+      <svg class="eye eye--sm" viewBox="0 0 211 184" width="211" height="184" aria-hidden="true" focusable="false"><use href="#eye-mark"></use></svg>
+      <span class="colophon-wordmark">BLINK</span>
+    </p>
+    <address class="colophon-address">
+      Blink Optometry &#183; 4236 Sheppard Ave. East, Unit 75, Scarborough, Ontario M1S 2C1<br>
+      <a href="tel:+14162929750">416-292-9750</a> &#183; <a href="mailto:info@blinkvision.ca">info@blinkvision.ca</a> &#183; Drs. Jacky Ock and Melissa Poon
+    </address>
+    <p class="colophon-note">OHIP covers annual exams for patients 19 and under and 65 and over; ask us about coverage between 20 and 64. &#169; 2026 Blink Optometry.</p>
+  </div>
+</footer>
 
 </body>
 </html>

@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Blink Optometry — design tokens
+   Emitted by Hallmark. Every colour, face, size and step on the page
+   resolves through one of these names. No literal values downstream.
+   ========================================================================== */
+
+:root {
+
+  /* ── Colour ───────────────────────────────────────────────────────────────
+     Warm-cream paper + brass-warm neutrals (harmonise with the phoropter's
+     black-and-brass photography); teal is the single cool note.
+     Contrast, sRGB-rendered, verified at build:
+       ink #231b13     on paper #f8f4ec   15.43 : 1
+       neutral #6f685c on paper           5.03 : 1
+       accent #006d73  on paper           5.58 : 1
+       accent-deep #004d55 on paper       8.70 : 1
+       paper on accent-deep               8.70 : 1   (chrome strip, colophon)
+       paper on accent                    5.58 : 1   (buttons)
+       focus #008691 on paper             3.96 : 1   (non-text UI ≥ 3 : 1)
+     Never #fff, never #000 — every grey carries chroma.
+     ------------------------------------------------------------------------ */
+  --color-paper:       oklch(96.8% 0.012 85);
+  --color-paper-2:     oklch(94.2% 0.014 85);
+  --color-rule:        oklch(84% 0.015 90);
+  --color-rule-strong: oklch(72% 0.018 90);
+  --color-neutral:     oklch(52% 0.02 80);
+  --color-ink:         oklch(23% 0.02 70);
+  --color-accent:      oklch(48.5% 0.085 201);
+  --color-accent-deep: oklch(38% 0.075 205);
+  --color-accent-wash: oklch(48.5% 0.085 201 / 0.14);
+  --color-focus:       oklch(55% 0.13 201);
+  /* Bed colour behind the intro stills — the border median of frame1.webp,
+     i.e. the studio wall the page is pinned to. Photographic ground truth
+     rather than page chrome; js/main.js drives it from here through the intro
+     (wall -> black at the cut -> --color-paper as the hero resolves).
+     Regenerate with the stills. */
+  --color-stage-bed:   #e4e1da;
+  /* Catch-light inside the eye mark; overridden where the mark sits on teal. */
+  --eye-glint:         var(--color-paper);
+  /* Alpha stop for the rim's edge mask — a mask channel, not a page colour. */
+  --mask-opaque:       #000;
+
+  /* ── Type: 2 + 1 faces, explicit division of labour ─────────────────────
+     display = Fraunces (wordmark, headings, the one pull-quote)
+     text    = Public Sans (everything read in running prose or UI)
+     mono    = IBM Plex Mono (the data-ledger layer ONLY: figures + micro-labels)
+     ------------------------------------------------------------------------ */
+  --font-display: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
+  --font-text:    'Public Sans', 'Public Sans Fallback', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Plex Mono Fallback', Menlo, Consolas, monospace;
+
+  /* Fraunces axis presets. High opsz = the hand-cut display cut; WONK on is
+     reserved for the wordmark and the pull-quote. Weights stay 550–620 —
+     the overexposed 900 look is deliberately avoided. */
+  --vf-display:      'opsz' 120, 'wght' 580, 'SOFT' 0, 'WONK' 0;
+  --vf-display-wonk: 'opsz' 144, 'wght' 560, 'SOFT' 0, 'WONK' 1;
+  --vf-heading:      'opsz' 100, 'wght' 600, 'SOFT' 0, 'WONK' 0;
+  --vf-name:         'opsz' 100, 'wght' 560, 'SOFT' 0, 'WONK' 0;
+
+  /* ── Scale: compressed. Headings cap at 2.25rem; hierarchy comes from
+     grid position, the micro-label layer and weight — not from size.
+     The single exception is the hero lockup: shopfront signage in the lens. */
+  --fs-micro:    0.6875rem;   /* 11px — mono labels */
+  --fs-micro-2:  0.75rem;     /* 12px */
+  --fs-xs:       0.8125rem;   /* 13px */
+  --fs-s:        0.9375rem;   /* 15px */
+  --fs-base:     1.0625rem;   /* 17px */
+  --fs-md:       1.25rem;     /* 20px — service names */
+  --fs-lg:       1.5rem;      /* 24px — doctor names, strapline */
+  --fs-xl:       1.75rem;     /* 28px — pull-quote */
+  --fs-section:  clamp(1.75rem, 1.2rem + 2.2vw, 2.25rem);
+
+  /* ── Hero lockup: ONE master geometry, uniformly scaled ──────────────────
+     The intro dissolves a photographic still of this lockup into the live
+     element with a UNIFORM transform (js/main.js, LOCKUP_TO_LENS 0.8104), so
+     every internal ratio has to be frozen across viewports — a scale cannot
+     correct a proportion, it only ghosts. Therefore --fs-lockup is the ONLY
+     absolute length in the lockup and every value under it is written as
+     `calc(master-px / base-px * 1em)`: an em of the element it is SET on
+     (margins/padding resolve against the element's own font-size, so the
+     base differs per line — it is spelled out in each comment).
+       master column = the 1024-wide render the stills were built from,
+       where --fs-lockup sits at its 1.0625rem (17px) cap and the box
+       measures 336.81 x 278.36.
+     Change --fs-lockup and the whole sign resizes as one piece; change any
+     other number here and the still stops matching the DOM. ------------- */
+  --fs-lockup:      min(3.9vw, 1.0625rem);   /* 17px at >= 436px wide; below
+                                                that the sign is a constant
+                                                77.3% of the viewport width */
+  --sz-eye:         calc(108 / 17 * 1em);    /* 108px  · em of the lockup   */
+  --fs-wordmark:    calc( 72 / 17 * 1em);    /*  72px  · em of the lockup   */
+  --lk-wordmark-mt: calc( 16 / 72 * 1em);    /*  16px  · em of the wordmark */
+  --fs-tagline:     1em;                     /*  17px  · em of the lockup   */
+  --lk-tagline-mt:  calc(  8 / 17 * 1em);    /*   8px  · em of the tagline  */
+  --fs-lockup-cta:  calc( 15 / 17 * 1em);    /*  15px  · em of the lockup   */
+  --lk-cta-mt:      calc( 24 / 15 * 1em);    /*  24px  · em of the CTA      */
+  --lk-cta-pad-y:   calc( 12 / 15 * 1em);    /*  12px  · em of the CTA      */
+  --lk-cta-pad-x:   calc( 24 / 15 * 1em);    /*  24px  · em of the CTA      */
+  --lk-cta-radius:  calc(  8 / 15 * 1em);    /*   8px  · em of the CTA      */
+
+  --lh-tight:  1.08;
+  --lh-snug:   1.28;
+  --lh-body:   1.62;
+  --ls-label:  0.13em;   /* tracked uppercase micro-labels */
+  --ls-index:  0.08em;
+  --ls-wordmark: 0.115em;
+
+  /* ── Space ──────────────────────────────────────────────────────────────
+     Section padding deliberately VARIES on a 2xl / 3xl / 4xl rhythm. */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-s:   1rem;
+  --space-m:   1.5rem;
+  --space-l:   2rem;
+  --space-xl:  3rem;
+  --space-2xl: clamp(3rem, 6vw, 4.5rem);
+  --space-3xl: clamp(4rem, 8vw, 6rem);
+  --space-4xl: clamp(4.5rem, 9vw, 7rem);
+
+  /* ── Measure & rules ────────────────────────────────────────────────────── */
+  --wrap:       60rem;
+  --gutter:     clamp(1.25rem, 5vw, 3.5rem);
+  --bleed:      clamp(0.75rem, 3.5vw, 3rem);   /* the two grid-breaks */
+  --rule-hair:  1px;
+  --rule-thick: 3px;
+  --radius:     8px;
+  --strip-h:    12px;
+
+  /* ── Motion ─────────────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur:  0.2s;
+
+  /* ── Z-scale (named) ────────────────────────────────────────────────────── */
+  --z-page:    1;
+  --z-strip:   2;
+  --z-intro:  40;
+  --z-rim:    60;
+  --z-align:  70;
+  --z-skip:   90;
+  --z-sticky: 100;
+  --z-skiplink: 120;
+
+  /* Written by js/main.js on load + resize (the phoropter lens, in px). */
+  --lens-x: 50vw;
+  --lens-y: 46.7svh;
+  --lens-r: 24.6svh;
+}
