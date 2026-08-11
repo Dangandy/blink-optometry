@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Act 1 — blink open (demo)</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #050505; }
+
+  .scene {
+    position: fixed; inset: 0;
+    background: url("shots/probe_start_chart_blur.png") center / cover no-repeat;
+    animation: adjust 1.9s cubic-bezier(.33,1,.68,1) both;
+  }
+  @keyframes adjust {           /* eyes adjusting to the light */
+    0%   { filter: brightness(.55) saturate(.8); }
+    55%  { filter: brightness(.8)  saturate(.92); }
+    100% { filter: brightness(1)   saturate(1); }
+  }
+
+  /* eyelids: huge soft-edged ellipses, curved like lids */
+  .lid {
+    position: fixed; left: 50%; width: 240vmax; height: 240vmax;
+    transform: translateX(-50%);
+    background: #050505; border-radius: 50%;
+    filter: blur(22px);
+    pointer-events: none; z-index: 2;
+  }
+  /* geometry: top lid's lower arc sits at 54vh + translateY;
+     bottom lid's upper arc at 54vh + translateY. Gap = the eye opening. */
+  .lid.top    { bottom: 46vh; animation: lidtop 1.9s cubic-bezier(.25,.9,.3,1) both; }
+  .lid.bottom { top: 54vh;    animation: lidbot 1.9s cubic-bezier(.25,.9,.3,1) both; }
+
+  /* sealed → slow part → quick half-blink → full open.
+     Top lid does most of the travel, like a real blink. */
+  @keyframes lidtop {
+    0%   { transform: translateX(-50%) translateY(10vh); }   /* sealed (overlap) */
+    18%  { transform: translateX(-50%) translateY(10vh); }   /* hold */
+    46%  { transform: translateX(-50%) translateY(-22vh); }  /* first part */
+    58%  { transform: translateX(-50%) translateY(-7vh); }   /* half-blink */
+    100% { transform: translateX(-50%) translateY(-88vh); }  /* fully clear */
+  }
+  @keyframes lidbot {
+    0%   { transform: translateX(-50%) translateY(-10vh); }
+    18%  { transform: translateX(-50%) translateY(-10vh); }
+    46%  { transform: translateX(-50%) translateY(8vh); }
+    58%  { transform: translateX(-50%) translateY(-1vh); }
+    100% { transform: translateX(-50%) translateY(84vh); }
+  }
+
+  /* warm inner-eyelid glow ABOVE the lids — light through skin; dies as they part */
+  .glow {
+    position: fixed; inset: 0; pointer-events: none; z-index: 3;
+    background: radial-gradient(ellipse 60% 45% at 50% 42%,
+                rgba(255,140,60,.32), rgba(120,40,10,.12) 55%, transparent 75%);
+    animation: glowout 1.25s ease-out both;
+  }
+  @keyframes glowout {
+    0% { opacity: 1; } 35% { opacity: .85; } 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scene, .glow, .lid { animation: none; }
+    .glow { opacity: 0; }
+    .lid.top    { transform: translateX(-50%) translateY(-88vh); }
+    .lid.bottom { transform: translateX(-50%) translateY(84vh); }
+  }
+
+  .replay {
+    position: fixed; right: 16px; bottom: 16px; z-index: 10;
+    font: 500 13px/1 system-ui; letter-spacing: .02em;
+    color: #f8f4ec; background: rgba(20,20,22,.75);
+    border: 1px solid rgba(248,244,236,.25); border-radius: 999px;
+    padding: 9px 16px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="scene"></div>
+  <div class="glow"></div>
+  <div class="lid top"></div>
+  <div class="lid bottom"></div>
+  <button class="replay" onclick="location.reload()">Replay</button>
+</body>
+</html>
