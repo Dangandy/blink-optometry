@@ -10,7 +10,7 @@
   .scene {
     position: fixed; inset: 0;
     background: url("shots/probe_start_chart_blur.png") center / cover no-repeat;
-    animation: adjust 1.9s cubic-bezier(.33,1,.68,1) both;
+    animation: adjust 2.3s cubic-bezier(.33,1,.68,1) both;
   }
   @keyframes adjust {           /* eyes adjusting to the light */
     0%   { filter: brightness(.55) saturate(.8); }
@@ -28,23 +28,19 @@
   }
   /* geometry: top lid's lower arc sits at 54vh + translateY;
      bottom lid's upper arc at 54vh + translateY. Gap = the eye opening. */
-  .lid.top    { bottom: 46vh; animation: lidtop 1.9s cubic-bezier(.25,.9,.3,1) both; }
-  .lid.bottom { top: 54vh;    animation: lidbot 1.9s cubic-bezier(.25,.9,.3,1) both; }
+  .lid.top    { bottom: 46vh; animation: lidtop 2.3s cubic-bezier(.5,.05,.2,1) both; }
+  .lid.bottom { top: 54vh;    animation: lidbot 2.3s cubic-bezier(.5,.05,.2,1) both; }
 
-  /* sealed → slow part → quick half-blink → full open.
+  /* sealed hold → one slow continuous open.
      Top lid does most of the travel, like a real blink. */
   @keyframes lidtop {
     0%   { transform: translateX(-50%) translateY(10vh); }   /* sealed (overlap) */
-    18%  { transform: translateX(-50%) translateY(10vh); }   /* hold */
-    46%  { transform: translateX(-50%) translateY(-22vh); }  /* first part */
-    58%  { transform: translateX(-50%) translateY(-7vh); }   /* half-blink */
+    20%  { transform: translateX(-50%) translateY(10vh); }   /* hold */
     100% { transform: translateX(-50%) translateY(-88vh); }  /* fully clear */
   }
   @keyframes lidbot {
     0%   { transform: translateX(-50%) translateY(-10vh); }
-    18%  { transform: translateX(-50%) translateY(-10vh); }
-    46%  { transform: translateX(-50%) translateY(8vh); }
-    58%  { transform: translateX(-50%) translateY(-1vh); }
+    20%  { transform: translateX(-50%) translateY(-10vh); }
     100% { transform: translateX(-50%) translateY(84vh); }
   }
 
@@ -53,7 +49,7 @@
     position: fixed; inset: 0; pointer-events: none; z-index: 3;
     background: radial-gradient(ellipse 60% 45% at 50% 42%,
                 rgba(255,140,60,.32), rgba(120,40,10,.12) 55%, transparent 75%);
-    animation: glowout 1.25s ease-out both;
+    animation: glowout 1.5s ease-out both;
   }
   @keyframes glowout {
     0% { opacity: 1; } 35% { opacity: .85; } 100% { opacity: 0; }
